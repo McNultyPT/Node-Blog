@@ -44,4 +44,19 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.delete('/:id', async (req, res) => {
+    const id = await Users.remove(req.params.id);
+
+    try {
+        if (id) {
+            res.status(204).end();
+        } else {
+            res.status(404).json({ message: 'A user with that ID does not exist.'});
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'The user could not be removed.'});
+    }
+});
+
 module.exports = router;
