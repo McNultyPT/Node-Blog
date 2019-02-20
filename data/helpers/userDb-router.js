@@ -29,4 +29,19 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+router.post('/', async (req, res) => {
+    const userInfo = req.body;
+
+    if (!userInfo.name)
+        return res.status(400).json({ errorMessage: 'Please provide a name for the user.'});
+
+    try {
+        const user = await Users.insert(userInfo);
+        res.status(201).json(user);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'There was an error saving the user.'});
+    }
+});
+
 module.exports = router;
