@@ -59,4 +59,23 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
+router.put('/:id', async (req, res) => {
+    const userInfo = req.body;
+
+    if (!userInfo.name)
+        return res.status(400).json({ errorMessage: 'Please provide a name for the user.'});
+
+    try {
+        const user = await Users.update(req.params.id, req.body);
+        if (user) {
+            res.status(200).json(user);
+        } else {
+            res.status(404).json({ message: 'A user with that ID does not exist.'});
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'The user information could not be changed.'});
+    }
+});
+
 module.exports = router;
