@@ -12,7 +12,7 @@ server.use('/api/users', userDbRouter);
 
 server.get('/', (req, res) => {
     res.send(`
-        <h1>Test Message</h1>
+        <h1>Welcome to the test API</h1>
     `)
 });
 
