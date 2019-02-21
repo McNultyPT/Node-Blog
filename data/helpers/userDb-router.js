@@ -4,15 +4,16 @@ const Users = require('./userDb.js');
 
 const router = express.Router();
 
-// router.use(upperCase);
+router.use(upperCase);
 
-// function upperCase(req, res, next) {
-//     const name = req.body.name;
-
-//     name.toUpperCase();
-
-//     next();
-// }
+function upperCase(req, res, next) {
+    if (!req.body.name) {
+        next();
+    } else {
+        req.body.name = req.body.name.toUpperCase();
+        next();
+    }
+}
 
 router.get('/', async (req, res) => {
     try {
@@ -54,21 +55,6 @@ router.get('/:id/posts', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
-    const userInfo = req.body;
-
-    if (!userInfo.name)
-        return res.status(400).json({ errorMessage: 'Please provide a name for the user.'});
-
-    try {
-        const user = await Users.insert(userInfo);
-        res.status(201).json(user);
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: 'There was an error saving the user.'});
-    }
-});
-
 router.delete('/:id', async (req, res) => {
     const id = await Users.remove(req.params.id);
 
@@ -81,6 +67,21 @@ router.delete('/:id', async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'The user could not be removed.'});
+    }
+});
+
+router.post('/', async (req, res) => {
+    const userInfo = req.body;
+
+    if (!userInfo.name)
+        return res.status(400).json({ errorMessage: 'Please provide a name for the user.'});
+
+    try {
+        const user = await Users.insert(userInfo);
+        res.status(201).json(user);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'There was an error saving the user.'});
     }
 });
 
